@@ -22,7 +22,8 @@ typedef struct sscene scene;
 void playscene(int code, scene *scn, char *title, char *name, int *inf, char facs[FACTIONS][13]);
 void readscenes(scene *scn);
 int checkInfluence(int *);
-void printInfluences(int *, char facs[FACTIONS][13], int wc); 
+void printInfluences(int *, char facs[FACTIONS][13], int wc);
+int findNextScene(scene *, int *, int);
 
 int main(){
 	char name[10];
@@ -35,9 +36,25 @@ int main(){
 	strcpy(factionchars[2], "Church\0");
 	strcpy(factionchars[3], "Common folk\0");
 
+	int graph[TOTAL_SCENES][TOTAL_SCENES][2] = {0};
+	int i, j;
+	FILE *fgraph = fopen("graph.txt", "r");
+	for (i = 0; i < TOTAL_SCENES; i++){
+		for (j = 0; j < TOTAL_SCENES; j++){
+			fscanf(fgraph, "%d", &graph[i][j][0]); //Left-hand decisions
+		}
+	}
+	for (i = 0; i < TOTAL_SCENES; i++){
+		for (j = 0; j < TOTAL_SCENES; j++){
+			fscanf(fgraph, "%d", &graph[i][j][1]); //Right-hand decisions
+		}
+	}
+
 	scene scenes[TOTAL_SCENES];
 
 	readscenes(scenes);
+
+	int currScene = 0, years = -2; 
 
 	printf("What is your name?\n> ");
 	scanf("%[^\n]s", name);
@@ -51,6 +68,7 @@ int main(){
 
 	while (!gameover) {
 		playscene(0, scenes, title, name, influences, factionchars);
+		
 		gameover = checkInfluence(influences);
 	}
 
@@ -82,6 +100,13 @@ void printInfluences(int *inf, char facs[FACTIONS][13], int wc) {
 			printf("\t%13d |", inf[i]);
 		}
 		printf("\n-------------------------------------------------------------------------------------\n");
+}
+
+int findNextScene(scene *all, int *graph, int current){
+	int possible[TOTAL_SCENES];
+	int valid = 0, i;
+	for (i = 0; i < TOTAL_SCENES; i++) { if (graph[current][i]) { possible[valid] = i; valid++; } }
+	return possible[rand() % valid];
 }
 
 void playscene(int code, scene *scn, char *title, char *name, int *inf, char facs[FACTIONS][13]){
