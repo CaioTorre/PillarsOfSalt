@@ -1,0 +1,18 @@
+Aide
+You are the ruler, my liege. It is up to you to make the important decisions around here, year in and year out. Do you understand?
+No
+0 0 0 0
+Yes
+0 0 0 0
+Aide
+Very funny, my liege...
+Ok
+0 0 0 0
+Ok
+0 0 0 0
+Aide
+Very well then, the people await your decision-making!
+Yay!
+0 0 0 0
+Just let them in...
+0 0 0 0
